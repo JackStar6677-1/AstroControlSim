@@ -1,0 +1,12 @@
+AstroControlSim/
+├── src/
+│   ├── Antenna/
+│   │   ├── Antenna.cpp
+│   │   └── Antenna.h
+│   ├── Controller/
+│   │   └── Controller.cpp
+│   └── main.cpp
+├── include/
+│   └── protocol.h
+├── build/
+└── Makefile

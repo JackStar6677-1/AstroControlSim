@@ -1,0 +1,26 @@
+# Build artifacts
+build/
+*.exe
+*.o
+*.obj
+
+# Data
+data/*.fits
+data/hltau_band6.fits
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# IDEs and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Project-specific logs
+*.log
