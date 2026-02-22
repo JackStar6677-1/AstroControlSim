@@ -7,7 +7,7 @@ BUILD_DIR = build
 
 SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/Antenna/Antenna.cpp $(SRC_DIR)/Network/AntennaServer.cpp
 
-TARGET = $(BUILD_DIR)/AstroControlSim
+TARGET = $(BUILD_DIR)/JackstarObs
 
 all: $(TARGET)
 

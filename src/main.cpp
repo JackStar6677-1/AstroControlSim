@@ -7,7 +7,7 @@
 #include "Network/AntennaServer.h"
 
 int main() {
-    std::cout << "AstroControlSim: Starting LARGE ARRAY Simulation (50 Antennas)..." << std::endl;
+    std::cout << "Jackstar Observatory: Starting LARGE ARRAY Simulation (50 Antennas)..." << std::endl;
 
     std::vector<Antenna> array;
     const int NUM_ANTENNAS = 50;
@@ -32,17 +32,44 @@ int main() {
     std::cout << "System Ready. Listening on Port 9000..." << std::endl;
     
     while (true) { // Infinite loop, Ctrl+C to stop
+        double dt = 0.1;
+
+        // 2. Global Wind Simulation (Disturbance)
+        static double windPhase = 0.0;
+        windPhase += dt * 0.5;
+        double windIntensity = (sin(windPhase) * 0.2) + (rand() % 100 / 500.0); // Sine wave + jitter
+        double windAngle = windPhase * 0.1; // Slowly rotating wind
+        
+        double windForceAz = cos(windAngle) * windIntensity;
+        double windForceEl = sin(windAngle) * windIntensity;
+
         for (auto& ant : array) {
-            ant.update(0.1); 
+            ant.applyExternalForce(windForceAz, windForceEl);
+            ant.update(dt);
+            ant.updateSensors(dt);
+
+            // 3. SCIENCE SIMULATION: Update Complex Signal
+            // Phase is relative to Az/El and antenna ground position
+            double lambda = 0.001; // Simulating 1mm wavelength (ALMA band)
+            double waveK = 2 * 3.14159 / lambda;
+            
+            // Project Az/El to 2D unit vector
+            double azRad = ant.getAzimuth() * (3.14 / 180.0);
+            double elRad = ant.getElevation() * (3.14 / 180.0);
+            double sx = cos(elRad) * sin(azRad);
+            double sy = cos(elRad) * cos(azRad);
+
+            // Geometric Phase Delay: phi = k * (B dot S)
+            double phase = waveK * (ant.getPosX() * sx + ant.getPosY() * sy);
+            
+            // Amplitude from FITS (Placeholder for now, or just use a constant for testing)
+            ant.setSignal(1.0, fmod(phase, 2 * 3.14159));
         }
 
-        // Print status of Antenna 1 to see if it moves
-        // Only print if moving to avoid spam? 
-        // Or just print periodically
         static int tick = 0;
-        if (tick++ % 10 == 0) { // Every 1 second
-             std::cout << "ANT-01: " << array[0].getStateString() << " Az:" << array[0].getAzimuth() 
-                       << " | ANT-50: " << array[49].getStateString() << " Az:" << array[49].getAzimuth() << "\r";
+        if (tick++ % 10 == 0) { 
+             std::cout << "[Jackstar] ANT-01: " << array[0].getStateString() << " Az:" << array[0].getAzimuth() 
+                       << " | Phase:" << array[0].getSignalPhase() << "\r";
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

@@ -43,7 +43,7 @@ En la sala de control (OSF) usarás Linux. Aquí tu "traductor":
 | `cd carpetas` | `cd carpetas` | Entrar a carpeta |
 | `python script.py` | `./script.py` | Ejecutar script (si tiene permisos) |
 | `taskkill ...` | `kill -9 <PID>` | Matar un proceso trabado |
-| `AstroControlSim.exe` | `systemctl start antenna-service` | Iniciar servicio de antena |
+| `JackstarObs.exe` | `systemctl start antenna-service` | Iniciar servicio de antena |
 | `type archivo.txt` | `cat archivo.txt` | Ver contenido de archivo |
 | `ping localhost` | `ping antenna-42` | Ver si una antena responde |
 | `ssh pablo@server` | `ssh operator@alma-osf` | Conectarse al servidor central |

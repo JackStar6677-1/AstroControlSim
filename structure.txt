@@ -1,4 +1,4 @@
-AstroControlSim/
+JackstarObservatory/
 ├── src/
 │   ├── Antenna/
 │   │   ├── Antenna.cpp

@@ -57,7 +57,7 @@ int main() {
         return 1;
     }
 
-    std::cout << "Connected to AstroControlSim Server!" << std::endl;
+    std::cout << "Connected to Jackstar Observatory Server!" << std::endl;
 
     // Send Move Command to Antenna 1
     Packet pkt;

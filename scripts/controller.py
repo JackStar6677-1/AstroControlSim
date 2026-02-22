@@ -15,7 +15,7 @@ def main():
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect(('127.0.0.1', 9000))
-        print("Connected to AstroControlSim Controller Port")
+        print("Connected to Jackstar Controller Port")
     except Exception as e:
         print(f"Could not connect: {e}")
         return

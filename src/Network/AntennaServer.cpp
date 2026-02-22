@@ -123,6 +123,14 @@ void AntennaServer::handleClient(SOCKET clientSocket) {
                      response.antennaId = ant.getId();
                      response.azimuth = ant.getAzimuth();
                      response.elevation = ant.getElevation();
+                     response.azError = ant.getTargetAzimuth() - ant.getAzimuth(); 
+                     response.elError = ant.getTargetElevation() - ant.getElevation();
+                     response.posX = ant.getPosX();
+                     response.posY = ant.getPosY();
+                     response.signalAmp = ant.getSignalAmp();
+                     response.signalPhase = ant.getSignalPhase();
+                     response.motorTemp = ant.getMotorTemp();
+                     response.motorCurrent = ant.getMotorCurrent();
                      response.state = (uint8_t)ant.getState();
                      
                      send(clientSocket, (const char*)&response, sizeof(Packet), 0);

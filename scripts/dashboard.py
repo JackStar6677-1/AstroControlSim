@@ -6,13 +6,21 @@ import matplotlib.animation as animation
 import math
 
 # Protocol
-# < = Little Endian (orden de bytes estándar en PC)
+# < = Little Endian
 # B = Unsigned Char (1 byte) -> Packet Type
 # I = Unsigned Int (4 bytes) -> ID
 # d = Double (8 bytes) -> Azimuth
 # d = Double (8 bytes) -> Elevation
+# d = Double (8 bytes) -> AzError
+# d = Double (8 bytes) -> ElError
+# d = Double (8 bytes) -> PosX
+# d = Double (8 bytes) -> PosY
+# d = Double (8 bytes) -> SignalAmp
+# d = Double (8 bytes) -> SignalPhase
+# d = Double (8 bytes) -> MotorTemp
+# d = Double (8 bytes) -> MotorCurrent
 # B = Unsigned Char (1 byte) -> State
-PACKET_FMT = '<BIddB' 
+PACKET_FMT = '<BIdddddddddd B' 
 PACKET_SIZE = struct.calcsize(PACKET_FMT)
 
 CMD_MOVE = 1
@@ -21,23 +29,29 @@ CMD_GET_TELEMETRY = 3
 
 class Dashboard:
     def __init__(self):
-        self.antennas = {} # Diccionario: ID -> (Az, El)
+        self.antennas = {} # ID -> (Az, El, AzErr, ElErr, X, Y, Amp, Phase)
         # Configuración del Gráfico (Matplotlib)
-        self.fig, self.ax = plt.subplots()
+        self.fig, (self.ax, self.ax_corr) = plt.subplots(1, 2, figsize=(12, 5))
+        
         self.scat = self.ax.scatter([], [], c=[], cmap='viridis', s=100)
-        self.ax.set_xlim(0, 360) # Azimut: 0 a 360 grados
-        self.ax.set_ylim(0, 90)  # Elevación: 0 a 90 grados
-        self.ax.set_xlabel('Azimut (deg)')
-        self.ax.set_ylabel('Elevación (deg)')
-        self.ax.set_title('ALMA Array Status - Telemetría en Vivo')
-        self.ax.grid(True)
+        self.ax.set_xlim(0, 360) 
+        self.ax.set_ylim(0, 90)  
+        self.ax.set_title('Jackstar Sky View (PID Control)')
+        
+        # Correlación Plot
+        self.scat_corr = self.ax_corr.scatter([], [], c='cyan', s=50, alpha=0.5)
+        self.ax_corr.set_xlim(-100, 100)
+        self.ax_corr.set_ylim(-100, 100)
+        self.ax_corr.set_title('Interferometry (UV Plane / Baselines)')
+        self.ax_corr.set_xlabel('U (meters)')
+        self.ax_corr.set_ylabel('V (meters)')
+        
         self.sock = None
 
     def connect(self):
         try:
-            # Crear Socket TCP (El "Teléfono" para llamar al servidor C++)
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.connect(('127.0.0.1', 9000)) # IP Local, Puerto 9000
+            self.sock.connect(('127.0.0.1', 9000)) 
             print("Conectado al Servidor de Antenas!")
         except Exception as e:
             print(f"Fallo de conexión: {e}")
@@ -46,20 +60,18 @@ class Dashboard:
     def request_telemetry(self):
         if not self.sock: return
         try:
-            # Enviar Solicitud (Byte Packet)
-            # struct.pack convierte números de Python a bytes binarios que C++ entiende
-            req = struct.pack(PACKET_FMT, CMD_GET_TELEMETRY, 0, 0.0, 0.0, 0)
+            # We send 0s for the 6 extra doubles in the request packet too
+            req = struct.pack(PACKET_FMT, CMD_GET_TELEMETRY, 0, 0,0,0,0,0,0,0,0,0,0, 0)
             self.sock.sendall(req)
             
-            # Read Responses (Expect 50 packets)
-            # Warning: Blocking read. In production use async.
             for _ in range(50): 
                 data = self.sock.recv(PACKET_SIZE)
                 if len(data) < PACKET_SIZE: break
                 
-                p_type, p_id, p_az, p_el, p_state = struct.unpack(PACKET_FMT, data)
+                # Unpack all 13 fields
+                p_type, p_id, p_az, p_el, p_ae, p_ee, p_x, p_y, p_sa, p_sp, p_mt, p_mc, p_st = struct.unpack(PACKET_FMT, data)
                 if p_type == TELEMETRY:
-                    self.antennas[p_id] = (p_az, p_el)
+                    self.antennas[p_id] = (p_az, p_el, p_ae, p_ee, p_x, p_y, p_sa, p_sp)
                     
         except Exception as e:
             print(f"Error requesting telemetry: {e}")
@@ -68,44 +80,52 @@ class Dashboard:
     def update(self, frame):
         self.request_telemetry()
         
-        # Prepare data for plot
-        x = []
-        y = []
-        colors = []
+        x, y, colors = [], [], []
+        uv_u, uv_v = [], []
         total_signal = 0
         active_antennas = 0
+        total_error = 0.0
         
         # Image dimensions for sampling
         img_h, img_w = 0, 0
         if 'image_data' in globals():
              img_h, img_w = image_data.shape
         
-        for ant_id, (az, el) in self.antennas.items():
+        ant_list = list(self.antennas.values())
+        for i, (az, el, azerr, elerr, px, py, amp, ph) in enumerate(ant_list):
             x.append(az)
             y.append(el)
             colors.append(el) 
+            total_error += math.sqrt(azerr**2 + elerr**2)
             
+            # Simulated UV Plane (Correlation between this antenna and the next)
+            if i < len(ant_list) - 1:
+                next_ant = ant_list[i+1]
+                # Baseline vector (U, V)
+                uv_u.append(px - next_ant[4])
+                uv_v.append(py - next_ant[5])
+
             # SIGNAL SIMULATION (Sampling Real Data)
             if 'image_data' in globals():
-                # Map Az/El to Pixel Coords
-                px = int((az / 360.0) * img_w)
-                py = int((el / 90.0) * img_h)
-                
-                # Check bounds
-                if 0 <= px < img_w and 0 <= py < img_h:
-                    signal = image_data[py, px]
+                idx_x = int((az / 360.0) * img_w)
+                idx_y = int((el / 90.0) * img_h)
+                if 0 <= idx_x < img_w and 0 <= idx_y < img_h:
+                    signal = image_data[idx_y, idx_x]
                     total_signal += float(signal)
                     active_antennas += 1
 
         self.scat.set_offsets(list(zip(x, y)))
         self.scat.set_array(colors)
         
-        # Update Title with Signal Info
-        if active_antennas > 0:
-            avg_sig = total_signal / active_antennas
-            self.ax.set_title(f'ALMA Status - Signal Strength: {avg_sig:.2f} (Real Data)')
+        if uv_u:
+            self.scat_corr.set_offsets(list(zip(uv_u, uv_v)))
+        
+        if len(self.antennas) > 0:
+            avg_err = total_error / len(self.antennas)
+            avg_sig = total_signal / active_antennas if active_antennas > 0 else 0
+            self.ax.set_title(f'Avg Error: {avg_err:.3f}° | Signal: {avg_sig:.1f}')
             
-        return self.scat,
+        return self.scat, self.scat_corr,
 
     def start(self):
         self.connect()

@@ -26,7 +26,7 @@ def send_command(antenna_id, az, el):
         print("Packet sent.")
         
     except ConnectionRefusedError:
-        print("Error: Could not connect to AstroControlSim (is it running?)")
+        print("Error: Could not connect to Jackstar Observatory (is it running?)")
     finally:
         sock.close()
 
