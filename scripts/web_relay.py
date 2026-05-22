@@ -21,36 +21,62 @@ async def telemetery_relay(websocket):
         tcp_sock.connect((TCP_IP, TCP_PORT))
         print("Connected to Jackstar C++ Server")
         
-        while True:
-            # Request Telemetry (CMD_GET_TELEMETRY = 3)
-            # Send 0s for the rest of the 70-byte packet
-            req = struct.pack(PACKET_FMT, 3, 0, 0,0,0,0,0,0,0,0, 0)
-            tcp_sock.sendall(req)
-            
-            telemetry_data = []
-            for _ in range(50):
-                data = tcp_sock.recv(PACKET_SIZE)
-                if len(data) < PACKET_SIZE: break
+        socket_lock = asyncio.Lock()
+        
+        async def send_telemetry_loop():
+            while True:
+                async with socket_lock:
+                    # Request Telemetry (CMD_GET_TELEMETRY = 3)
+                    # Send 0s for the rest of the 86-byte packet
+                    req = struct.pack(PACKET_FMT, 3, 0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0, 0)
+                    tcp_sock.sendall(req)
+                    
+                    telemetry_data = []
+                    for _ in range(50):
+                        data = tcp_sock.recv(PACKET_SIZE)
+                        if len(data) < PACKET_SIZE: break
+                        
+                        p_type, p_id, p_az, p_el, p_ae, p_ee, p_x, p_y, p_sa, p_sp, p_mt, p_mc, p_st = struct.unpack(PACKET_FMT, data)
+                        
+                        telemetry_data.append({
+                            "id": p_id,
+                            "az": round(p_az, 3),
+                            "el": round(p_el, 3),
+                            "error": round((p_ae**2 + p_ee**2)**0.5, 4),
+                            "state": p_st,
+                            "x": p_x,
+                            "y": p_y,
+                            "amp": round(p_sa, 2),
+                            "phase": round(p_sp, 2),
+                            "temp": round(p_mt, 1),
+                            "current": round(p_mc, 2)
+                        })
                 
-                p_type, p_id, p_az, p_el, p_ae, p_ee, p_x, p_y, p_sa, p_sp, p_mt, p_mc, p_st = struct.unpack(PACKET_FMT, data)
-                
-                telemetry_data.append({
-                    "id": p_id,
-                    "az": round(p_az, 3),
-                    "el": round(p_el, 3),
-                    "error": round((p_ae**2 + p_ee**2)**0.5, 4),
-                    "state": p_st,
-                    "x": p_x,
-                    "y": p_y,
-                    "amp": round(p_sa, 2),
-                    "phase": round(p_sp, 2),
-                    "temp": round(p_mt, 1),
-                    "current": round(p_mc, 2)
-                })
-            
-            # Send to Web Client as JSON
-            await websocket.send(json.dumps(telemetry_data))
-            await asyncio.sleep(0.1) # 10Hz Refresh rate
+                # Send to Web Client as JSON
+                await websocket.send(json.dumps(telemetry_data))
+                await asyncio.sleep(0.1) # 10Hz Refresh rate
+
+        async def recv_commands_loop():
+            async for message in websocket:
+                cmd = json.loads(message)
+                action = cmd.get('action')
+                if action == 'move':
+                    az = cmd.get('azimuth', 0.0)
+                    el = cmd.get('elevation', 0.0)
+                    pkt = struct.pack(PACKET_FMT, 1, 0, az, el, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0, 0)
+                    async with socket_lock:
+                        tcp_sock.sendall(pkt)
+                    print(f"Relayed MOVE command: Az={az}, El={el}")
+                elif action == 'reset':
+                    pkt = struct.pack(PACKET_FMT, 4, 0, 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0, 0)
+                    async with socket_lock:
+                        tcp_sock.sendall(pkt)
+                    print("Relayed Global RESET command")
+
+        await asyncio.gather(
+            send_telemetry_loop(),
+            recv_commands_loop()
+        )
             
     except Exception as e:
         print(f"Relay Error: {e}")

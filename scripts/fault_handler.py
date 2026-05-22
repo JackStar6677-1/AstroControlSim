@@ -3,7 +3,7 @@ import struct
 import time
 
 # Protocol
-PACKET_FMT = '<BIddB' # type, id, az, el, state
+PACKET_FMT = '<BIdddddddddd B' # Rebranded 86-byte structure
 PACKET_SIZE = struct.calcsize(PACKET_FMT)
 
 CMD_MOVE = 1
@@ -28,7 +28,7 @@ def main():
     try:
         while True:
             # Request Telemetry
-            req = struct.pack(PACKET_FMT, CMD_GET_TELEMETRY, 0, 0.0, 0.0, 0)
+            req = struct.pack(PACKET_FMT, CMD_GET_TELEMETRY, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
             sock.sendall(req)
             
             # Read Responses (Expect 50 packets)
@@ -36,12 +36,12 @@ def main():
                 data = sock.recv(PACKET_SIZE)
                 if len(data) < PACKET_SIZE: break
                 
-                _, p_id, p_az, p_el, p_state = struct.unpack(PACKET_FMT, data)
+                p_type, p_id, p_az, p_el, p_ae, p_ee, p_x, p_y, p_sa, p_sp, p_mt, p_mc, p_state = struct.unpack(PACKET_FMT, data)
                 
                 if p_state == STATE_FAULT:
                     print(f"[!] FAULT DETECTED ON ANTENNA {p_id} -> RESETTING...")
                     # Send Reset Packet
-                    reset_pkt = struct.pack(PACKET_FMT, CMD_RESET, p_id, 0.0, 0.0, 0)
+                    reset_pkt = struct.pack(PACKET_FMT, CMD_RESET, p_id, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
                     sock.sendall(reset_pkt)
                     
             time.sleep(1) # Monitor every second

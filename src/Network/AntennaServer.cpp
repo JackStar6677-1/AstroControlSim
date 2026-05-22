@@ -100,9 +100,7 @@ void AntennaServer::handleClient(SOCKET clientSocket) {
         if (iResult > 0) {
             // Process Packet
             if (packet.type == PacketType::CMD_MOVE) {
-                // Warning: No mutex here for simplicity (Race condition potential)
-                // In production, protect shared 'antennas' vector access
-                
+                std::lock_guard<std::mutex> lock(arrayMutex);
                 if (packet.antennaId == 0) {
                     // Broadcast to all
                      std::cout << "[Server] Broadcast CMD: Az=" << packet.azimuth << " El=" << packet.elevation << std::endl;
@@ -117,25 +115,33 @@ void AntennaServer::handleClient(SOCKET clientSocket) {
             } else if (packet.type == PacketType::CMD_GET_TELEMETRY) {
                 // Send status of ALL antennas
                 // Ideally this should be a single bulk packet, but for simplicity we send N packets
-                for (const auto& ant : *antennas) {
-                     Packet response;
-                     response.type = PacketType::TELEMETRY;
-                     response.antennaId = ant.getId();
-                     response.azimuth = ant.getAzimuth();
-                     response.elevation = ant.getElevation();
-                     response.azError = ant.getTargetAzimuth() - ant.getAzimuth(); 
-                     response.elError = ant.getTargetElevation() - ant.getElevation();
-                     response.posX = ant.getPosX();
-                     response.posY = ant.getPosY();
-                     response.signalAmp = ant.getSignalAmp();
-                     response.signalPhase = ant.getSignalPhase();
-                     response.motorTemp = ant.getMotorTemp();
-                     response.motorCurrent = ant.getMotorCurrent();
-                     response.state = (uint8_t)ant.getState();
-                     
+                std::vector<Packet> responses;
+                {
+                    std::lock_guard<std::mutex> lock(arrayMutex);
+                    responses.reserve(antennas->size());
+                    for (const auto& ant : *antennas) {
+                         Packet response;
+                         response.type = PacketType::TELEMETRY;
+                         response.antennaId = ant.getId();
+                         response.azimuth = ant.getAzimuth();
+                         response.elevation = ant.getElevation();
+                         response.azError = ant.getTargetAzimuth() - ant.getAzimuth(); 
+                         response.elError = ant.getTargetElevation() - ant.getElevation();
+                         response.posX = ant.getPosX();
+                         response.posY = ant.getPosY();
+                         response.signalAmp = ant.getSignalAmp();
+                         response.signalPhase = ant.getSignalPhase();
+                         response.motorTemp = ant.getMotorTemp();
+                         response.motorCurrent = ant.getMotorCurrent();
+                         response.state = (uint8_t)ant.getState();
+                         responses.push_back(response);
+                    }
+                }
+                for (const auto& response : responses) {
                      send(clientSocket, (const char*)&response, sizeof(Packet), 0);
                 } 
             } else if (packet.type == PacketType::CMD_RESET) {
+                 std::lock_guard<std::mutex> lock(arrayMutex);
                  if (packet.antennaId == 0) {
                      for (auto& ant : *antennas) ant.reset();
                      std::cout << "[Server] Global RESET broadcasted." << std::endl;

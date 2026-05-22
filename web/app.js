@@ -106,4 +106,40 @@ function updateUI(data) {
     lastUpdateText.innerText = `LAST TELEMETRY: ${new Date().toLocaleTimeString()}`;
 }
 
+// Control Input Listeners
+const btnDispatch = document.getElementById('btn-dispatch');
+const btnReset = document.getElementById('btn-reset');
+const inputAz = document.getElementById('cmd-az');
+const inputEl = document.getElementById('cmd-el');
+
+btnDispatch.addEventListener('click', () => {
+    const az = parseFloat(inputAz.value);
+    const el = parseFloat(inputEl.value);
+    if (isNaN(az) || isNaN(el)) {
+        alert("Please enter valid Azimuth and Elevation coordinates.");
+        return;
+    }
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            action: 'move',
+            azimuth: az,
+            elevation: el
+        }));
+        console.log(`Dispatched move command: Az=${az}, El=${el}`);
+    } else {
+        alert("Not connected to telemetry server.");
+    }
+});
+
+btnReset.addEventListener('click', () => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            action: 'reset'
+        }));
+        console.log("Dispatched emergency reset command.");
+    } else {
+        alert("Not connected to telemetry server.");
+    }
+});
+
 connect();

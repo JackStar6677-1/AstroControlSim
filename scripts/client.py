@@ -12,7 +12,7 @@ import time
 # Total size: 1+4+8+8 = 21 bytes. Warning: C++ struct alignment might add padding!
 # In Protocol.h we used #pragma pack(push, 1) so size is exactly 21.
 
-PACKET_FMT = '<BIdd' # Little endian, UByte, UInt, Double, Double
+PACKET_FMT = '<BIdddddddddd B' # Match rebranded 86-byte structure
 CMD_MOVE = 1
 
 def send_command(antenna_id, az, el):
@@ -21,7 +21,8 @@ def send_command(antenna_id, az, el):
         sock.connect(('127.0.0.1', 9000))
         print(f"Connected! Sending Move Command to Antenna {antenna_id}: Az={az}, El={el}")
         
-        packet = struct.pack(PACKET_FMT, CMD_MOVE, antenna_id, az, el)
+        # Pack CMD_MOVE (1), antenna_id, target az, target el, and 8 double + 1 byte pads to reach 86 bytes
+        packet = struct.pack(PACKET_FMT, CMD_MOVE, antenna_id, az, el, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
         sock.sendall(packet)
         print("Packet sent.")
         

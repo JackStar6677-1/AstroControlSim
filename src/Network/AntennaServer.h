@@ -5,6 +5,7 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <mutex>
 #include "../Antenna/Antenna.h"
 
 // Link with Ws2_32.lib
@@ -16,6 +17,7 @@ private:
     std::vector<Antenna>* antennas; // Reference to the main antenna array
     std::atomic<bool> running;
     std::thread serverThread;
+    std::mutex arrayMutex;
 
     void acceptConnections();
     void handleClient(SOCKET clientSocket);

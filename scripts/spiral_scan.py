@@ -4,11 +4,11 @@ import time
 import math
 
 # Protocol
-PACKET_FMT = '<BIddB' # type, id, az, el, state
+PACKET_FMT = '<BIdddddddddd B' # Rebranded 86-byte structure
 CMD_MOVE = 1
 
 def send_move(sock, ant_id, az, el):
-    packet = struct.pack(PACKET_FMT, CMD_MOVE, ant_id, az, el, 0)
+    packet = struct.pack(PACKET_FMT, CMD_MOVE, ant_id, az, el, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
     sock.sendall(packet)
 
 def main():

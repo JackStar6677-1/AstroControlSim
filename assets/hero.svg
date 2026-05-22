@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1b113a"/>
+      <stop offset="60%" stop-color="#0b071a"/>
+      <stop offset="100%" stop-color="#05030d"/>
+    </radialGradient>
+    
+    <!-- Gold Gradients -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3e098"/>
+      <stop offset="50%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#aa7c11"/>
+    </linearGradient>
+    
+    <!-- Purple/Magenta Glow -->
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8a2be2" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#da70d6" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#8a2be2" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <linearGradient id="beamGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.8"/>
+      <stop offset="30%" stop-color="#8a2be2" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#0b071a" stop-opacity="0"/>
+    </linearGradient>
+    
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="300" fill="url(#bgGrad)"/>
+
+  <!-- Stars & Constellations -->
+  <g stroke="#ffffff" stroke-opacity="0.2" stroke-width="0.5">
+    <line x1="100" y1="50" x2="180" y2="90"/>
+    <line x1="180" y1="90" x2="220" y2="40"/>
+    <line x1="220" y1="40" x2="310" y2="80"/>
+    <line x1="550" y1="60" x2="630" y2="40"/>
+    <line x1="630" y1="40" x2="700" y2="90"/>
+  </g>
+  
+  <g fill="#ffffff" fill-opacity="0.6">
+    <circle cx="100" cy="50" r="2" />
+    <circle cx="180" cy="90" r="3" fill="#f3e098"/>
+    <circle cx="220" cy="40" r="1.5" />
+    <circle cx="310" cy="80" r="2.5" />
+    <circle cx="550" cy="60" r="2" />
+    <circle cx="630" cy="40" r="3" fill="#da70d6"/>
+    <circle cx="700" cy="90" r="2" />
+    <circle cx="150" cy="220" r="1" />
+    <circle cx="650" cy="230" r="1" />
+    <circle cx="400" cy="40" r="1" />
+  </g>
+
+  <!-- Radio Waves/Signal Grid -->
+  <path d="M -50 250 C 150 150, 450 150, 850 250" fill="none" stroke="url(#purpleGrad)" stroke-width="1.5" opacity="0.3"/>
+  <path d="M -50 220 C 150 120, 450 120, 850 220" fill="none" stroke="url(#purpleGrad)" stroke-width="1" opacity="0.2"/>
+  <path d="M -50 190 C 150 90, 450 90, 850 190" fill="none" stroke="url(#purpleGrad)" stroke-width="0.8" opacity="0.1"/>
+
+  <!-- Golden Ray / Signal Beam -->
+  <path d="M 680 250 L 520 -50 L 450 -50 Z" fill="url(#beamGrad)" opacity="0.45"/>
+
+  <!-- Observatory Dishes (Silhouettes & Stylized Gold Details) -->
+  <!-- Dish 1 (Large Foreground Right) -->
+  <g transform="translate(620, 160) scale(0.9)">
+    <!-- Base / Mount -->
+    <path d="M 60 100 L 40 40 L 80 40 Z" fill="#201a35" stroke="url(#goldGrad)" stroke-width="1.5"/>
+    <rect x="55" y="40" width="10" height="20" fill="url(#goldGrad)"/>
+    <!-- Dish Back Structure -->
+    <path d="M 10 30 Q 60 70 110 30 Z" fill="#151025" stroke="#da70d6" stroke-width="1"/>
+    <!-- Gold Main Reflector -->
+    <path d="M 0 20 Q 60 65 120 20 C 105 -5, 15 -5, 0 20 Z" fill="url(#goldGrad)" filter="url(#glow)"/>
+    <!-- Feed Support Legs -->
+    <line x1="0" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)" stroke-width="1.5"/>
+    <line x1="120" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)" stroke-width="1.5"/>
+    <!-- Feed Horn / Receiver -->
+    <circle cx="60" cy="-20" r="6" fill="#da70d6"/>
+    <polygon points="56,-14 64,-14 60,-22" fill="#ffffff"/>
+  </g>
+
+  <!-- Dish 2 (Midground Left) -->
+  <g transform="translate(80, 190) scale(0.65)">
+    <path d="M 60 100 L 40 40 L 80 40 Z" fill="#201a35" stroke="url(#goldGrad)" stroke-width="1.5"/>
+    <rect x="55" y="40" width="10" height="20" fill="url(#goldGrad)"/>
+    <path d="M 10 30 Q 60 70 110 30 Z" fill="#151025" stroke="#da70d6" stroke-width="1"/>
+    <path d="M 0 20 Q 60 65 120 20 C 105 -5, 15 -5, 0 20 Z" fill="url(#goldGrad)"/>
+    <line x1="0" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)" stroke-width="1"/>
+    <line x1="120" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)" stroke-width="1"/>
+    <circle cx="60" cy="-20" r="5" fill="#8a2be2"/>
+  </g>
+
+  <!-- Dish 3 (Small Background Center) -->
+  <g transform="translate(320, 210) scale(0.45)">
+    <path d="M 60 100 L 40 40 L 80 40 Z" fill="#1a142c" stroke="url(#goldGrad)" stroke-width="1"/>
+    <path d="M 0 20 Q 60 60 120 20 Z" fill="url(#goldGrad)" opacity="0.8"/>
+    <line x1="0" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)"/>
+    <line x1="120" y1="20" x2="60" y2="-20" stroke="url(#goldGrad)"/>
+    <circle cx="60" cy="-20" r="4" fill="#da70d6"/>
+  </g>
+
+  <!-- Typography / Titles -->
+  <g transform="translate(50, 90)">
+    <!-- Subtitle (Tracking/Science indicator) -->
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, Helvetica, sans-serif" font-size="12" font-weight="600" fill="#da70d6" letter-spacing="4" opacity="0.9">
+      JACKSTAR ENGINEERING
+    </text>
+    <!-- Main Title -->
+    <text x="-2" y="45" font-family="'Segoe UI', Roboto, Helvetica, sans-serif" font-size="42" font-weight="800" fill="url(#goldGrad)" letter-spacing="1.5" filter="url(#glow)">
+      AstroControlSim
+    </text>
+    <!-- Subtitle description -->
+    <text x="0" y="75" font-family="'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="300" fill="#ffffff" opacity="0.75" letter-spacing="0.5">
+      Simulación de Radiotelescopios y Red de Telemetría
+    </text>
+  </g>
+
+  <!-- Status indicator overlay -->
+  <g transform="translate(50, 240)">
+    <circle cx="10" cy="10" r="5" fill="#52ff85" filter="url(#glow)"/>
+    <text x="25" y="14" font-family="monospace" font-size="12" fill="#52ff85" font-weight="bold">
+      ARRAY STATUS: ONLINE (50/50 ACTIVE)
+    </text>
+  </g>
+</svg>
