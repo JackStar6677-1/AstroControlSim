@@ -58,6 +58,29 @@ graph TD
     end
 ```
 
+### Protocolo de Comunicación y Flujo de Telemetría (10 Hz)
+
+El siguiente diagrama detalla cómo fluyen los comandos y la telemetría en tiempo real de forma segura y libre de condiciones de carrera:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant UI as Web Control Center (Navegador)
+    participant Relay as Web Relay (Python asyncio)
+    participant Srv as Antenna Server (C++ Multi-thread)
+    participant Sim as Jackstar Engine (Física + PID)
+
+    Note over Sim,Srv: Acceso concurrente seguro mediante std::mutex
+    UI->>Relay: Envia comando en JSON (MOVE/RESET)
+    Relay->>Srv: Convierte y envía paquete binario (86 bytes)
+    Note over Srv: Desempaqueta estructura binaria en memoria
+    Srv->>Sim: Actualiza coordenadas de destino de antena
+    Note over Sim: Bucle de física e inercia ajusta posición usando PID
+    Sim-->>Srv: Escribe telemetría (Az, El, errores, motores)
+    Srv-->>Relay: Envía actualización binaria a 10 Hz (86 bytes)
+    Relay-->>UI: Retransmite telemetría parseada en JSON
+```
+
 ---
 
 ## 🛠️ Guía de Instalación y Ejecución

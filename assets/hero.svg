@@ -37,6 +37,39 @@
     </filter>
   </defs>
 
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1.0; }
+    }
+    @keyframes beamPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -40;
+      }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    .star-slow { animation: pulse 4s infinite ease-in-out; }
+    .star-fast { animation: pulse 2s infinite ease-in-out; }
+    .star-medium { animation: pulse 3s infinite ease-in-out; }
+    .dish-beam {
+      animation: beamPulse 6s infinite ease-in-out;
+    }
+    .wave-line {
+      stroke-dasharray: 8, 12;
+      animation: dash 5s infinite linear;
+    }
+    .status-dot {
+      animation: blink 1.5s infinite ease-in-out;
+    }
+  </style>
+
   <!-- Background -->
   <rect width="800" height="300" fill="url(#bgGrad)"/>
 
@@ -50,25 +83,25 @@
   </g>
   
   <g fill="#ffffff" fill-opacity="0.6">
-    <circle cx="100" cy="50" r="2" />
-    <circle cx="180" cy="90" r="3" fill="#f3e098"/>
-    <circle cx="220" cy="40" r="1.5" />
-    <circle cx="310" cy="80" r="2.5" />
-    <circle cx="550" cy="60" r="2" />
-    <circle cx="630" cy="40" r="3" fill="#da70d6"/>
-    <circle cx="700" cy="90" r="2" />
-    <circle cx="150" cy="220" r="1" />
-    <circle cx="650" cy="230" r="1" />
-    <circle cx="400" cy="40" r="1" />
+    <circle cx="100" cy="50" r="2" class="star-slow"/>
+    <circle cx="180" cy="90" r="3" fill="#f3e098" class="star-medium"/>
+    <circle cx="220" cy="40" r="1.5" class="star-fast"/>
+    <circle cx="310" cy="80" r="2.5" class="star-medium"/>
+    <circle cx="550" cy="60" r="2" class="star-slow"/>
+    <circle cx="630" cy="40" r="3" fill="#da70d6" class="star-fast"/>
+    <circle cx="700" cy="90" r="2" class="star-slow"/>
+    <circle cx="150" cy="220" r="1" class="star-fast"/>
+    <circle cx="650" cy="230" r="1" class="star-slow"/>
+    <circle cx="400" cy="40" r="1" class="star-medium"/>
   </g>
 
   <!-- Radio Waves/Signal Grid -->
-  <path d="M -50 250 C 150 150, 450 150, 850 250" fill="none" stroke="url(#purpleGrad)" stroke-width="1.5" opacity="0.3"/>
-  <path d="M -50 220 C 150 120, 450 120, 850 220" fill="none" stroke="url(#purpleGrad)" stroke-width="1" opacity="0.2"/>
-  <path d="M -50 190 C 150 90, 450 90, 850 190" fill="none" stroke="url(#purpleGrad)" stroke-width="0.8" opacity="0.1"/>
+  <path d="M -50 250 C 150 150, 450 150, 850 250" fill="none" stroke="url(#purpleGrad)" stroke-width="1.5" opacity="0.3" class="wave-line"/>
+  <path d="M -50 220 C 150 120, 450 120, 850 220" fill="none" stroke="url(#purpleGrad)" stroke-width="1" opacity="0.2" class="wave-line" style="animation-duration: 7s;"/>
+  <path d="M -50 190 C 150 90, 450 90, 850 190" fill="none" stroke="url(#purpleGrad)" stroke-width="0.8" opacity="0.1" class="wave-line" style="animation-duration: 9s;"/>
 
   <!-- Golden Ray / Signal Beam -->
-  <path d="M 680 250 L 520 -50 L 450 -50 Z" fill="url(#beamGrad)" opacity="0.45"/>
+  <path d="M 680 250 L 520 -50 L 450 -50 Z" fill="url(#beamGrad)" opacity="0.45" class="dish-beam"/>
 
   <!-- Observatory Dishes (Silhouettes & Stylized Gold Details) -->
   <!-- Dish 1 (Large Foreground Right) -->
@@ -126,7 +159,7 @@
 
   <!-- Status indicator overlay -->
   <g transform="translate(50, 240)">
-    <circle cx="10" cy="10" r="5" fill="#52ff85" filter="url(#glow)"/>
+    <circle cx="10" cy="10" r="5" fill="#52ff85" filter="url(#glow)" class="status-dot"/>
     <text x="25" y="14" font-family="monospace" font-size="12" fill="#52ff85" font-weight="bold">
       ARRAY STATUS: ONLINE (50/50 ACTIVE)
     </text>
