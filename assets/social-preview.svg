@@ -21,7 +21,7 @@
   <text x="72" y="120" class="ey">JACKSTAR6677</text>
   <text x="68" y="260" class="ti">AstroControlSim</text>
   <text x="72" y="340" class="su">50 antenas · PID · 86-byte TCP · 10 Hz</text>
-  <text x="72" y="400" class="su" fill="#94a3b8">C++ · Python · Web · Addon Slimefun</text>
+  <text x="72" y="400" class="su" fill="#94a3b8">C++ · Python · Web Control Center</text>
   <circle class="dot" cx="72" cy="480" r="8" fill="#52ff85"/>
   <text x="100" y="488" font-family="Consolas, monospace" font-size="22" fill="#52ff85">ARRAY ONLINE</text>
 </svg>

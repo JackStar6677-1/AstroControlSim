@@ -23,7 +23,6 @@ body:
         - web/index.html
         - Scripts Python
         - Build / CI
-        - Addon Slimefun (en drakes-slimefun-labs)
   - type: input
     id: version
     attributes:

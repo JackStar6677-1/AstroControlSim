@@ -11,18 +11,9 @@
   <img src="https://img.shields.io/badge/C++-17-00599C?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++17"/>
   <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/TCP-86%20bytes-d4af37?style=for-the-badge" alt="Protocol"/>
-  <a href="https://github.com/JackStar6677-1/Coronalis"><img src="https://img.shields.io/badge/Minecraft-Coronalis-7c3aed?style=for-the-badge" alt="Coronalis addon"/></a>
 </p>
 
 Un simulador de matriz de radiotelescopios de alto rendimiento desarrollado en **C++** y **Python**. Simula control físico, protocolos binarios en tiempo real y operación de observatorio (inspirado en ALMA y VLA).
-
-> **Minecraft (repo aparte):** el addon Slimefun se llama **[Coronalis](https://github.com/JackStar6677-1/Coronalis)** — nombre propio del ecosistema Jack, sin relación con marcas de terceros. Ver [docs/CORONALIS.md](docs/CORONALIS.md).
-
-| | **AstroControlSim** (aquí) | **Coronalis** (addon) |
-|---|---------------------------|------------------------|
-| Plataforma | C++ / Python / Web | Paper + Slimefun 6 |
-| Repo | `JackStar6677-1/AstroControlSim` | `JackStar6677-1/Coronalis` |
-| Código fuente addon | — | `drakes-slimefun-labs/.../Coronalis` |
 
 Créditos: [CREDITS.md](CREDITS.md)
 
@@ -173,7 +164,6 @@ Para evitar bloqueos y desalineaciones de red, toda la comunicación utiliza la 
 </p>
 
 <p align="center">
-  <a href="docs/SLIMEFUN_ADDON.md">Addon Slimefun</a> ·
   <a href="CREDITS.md">Créditos</a> ·
   <a href="https://github.com/JackStar6677-1/AstroControlSim/issues">Issues</a>
 </p>

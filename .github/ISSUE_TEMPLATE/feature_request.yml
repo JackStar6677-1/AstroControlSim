@@ -1,12 +1,12 @@
 name: Sugerencia
-description: Idea para el observatorio o el addon
+description: Idea para el simulador o la documentación
 title: "[Idea]: "
 labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        **Jackstar Observatory** — simulador y addon Slimefun comparten marca pero repos distintos.
+        **AstroControlSim** — simulador de radiotelescopios (C++/Python/web). Por **JackStar6677**.
   - type: textarea
     id: idea
     attributes:

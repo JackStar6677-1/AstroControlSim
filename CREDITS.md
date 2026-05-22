@@ -15,7 +15,6 @@
 | **Antenna Server** | TCP binario 86 bytes @ puerto 9000 |
 | **Web Relay** | Python asyncio + WebSockets @ 9001 |
 | **Web Control Center** | Panel HTML/JS de operaciones |
-| **[Coronalis](https://github.com/JackStar6677-1/Coronalis)** | Addon Slimefun; código en `drakes-slimefun-labs/.../Coronalis` |
 
 ## Agradecimientos conceptuales
 
