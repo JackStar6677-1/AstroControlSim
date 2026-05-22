@@ -10,7 +10,8 @@ enum PacketType : uint8_t {
     CMD_MOVE = 1,
     TELEMETRY = 2,
     CMD_GET_TELEMETRY = 3,
-    CMD_RESET = 4
+    CMD_RESET = 4,
+    CMD_TUNE_PID = 5
 };
 
 struct Packet {

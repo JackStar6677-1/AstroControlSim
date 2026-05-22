@@ -5,7 +5,8 @@
 
 Antenna::Antenna(int id) : id(id), currentAzimuth(0.0), currentElevation(0.0), 
                            targetAzimuth(0.0), targetElevation(0.0), state(AntennaState::IDLE),
-                           currentVelAz(0.0), currentVelEl(0.0), integralAz(0.0), integralEl(0.0),
+                           currentVelAz(0.0), currentVelEl(0.0), Kp(1.2), Ki(0.05), Kd(0.3),
+                           integralAz(0.0), integralEl(0.0),
                            lastErrorAz(0.0), lastErrorEl(0.0), externalForceAz(0.0), externalForceEl(0.0),
                            signalAmplitude(0.0), signalPhase(0.0), motorTemp(25.0), motorCurrent(0.0) {
     // Layout en espiral o grilla para las posiciones en tierra
@@ -135,6 +136,20 @@ void Antenna::setSignal(double amp, double phase) {
     signalAmplitude = amp;
     signalPhase = phase;
 }
+
+void Antenna::tunePID(double kp, double ki, double kd) {
+    Kp = kp;
+    Ki = ki;
+    Kd = kd;
+    // Reset integrals to prevent windup bump during tune
+    integralAz = 0.0;
+    integralEl = 0.0;
+    std::cout << "[Antenna " << id << "] PID tuned: Kp=" << kp << " Ki=" << ki << " Kd=" << kd << std::endl;
+}
+
+double Antenna::getKp() const { return Kp; }
+double Antenna::getKi() const { return Ki; }
+double Antenna::getKd() const { return Kd; }
 
 std::string Antenna::getStateString() const {
     switch (state) {

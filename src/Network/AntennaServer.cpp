@@ -149,6 +149,18 @@ void AntennaServer::handleClient(SOCKET clientSocket) {
                      (*antennas)[packet.antennaId - 1].reset();
                      std::cout << "[Server] RESET for ANT-" << packet.antennaId << std::endl;
                  }
+            } else if (packet.type == PacketType::CMD_TUNE_PID) {
+                 std::lock_guard<std::mutex> lock(arrayMutex);
+                 double kp = packet.azimuth;
+                 double ki = packet.elevation;
+                 double kd = packet.azError; // kd is passed in azError field
+                 if (packet.antennaId == 0) {
+                     for (auto& ant : *antennas) ant.tunePID(kp, ki, kd);
+                     std::cout << "[Server] Global PID TUNE: Kp=" << kp << " Ki=" << ki << " Kd=" << kd << std::endl;
+                 } else if (packet.antennaId <= antennas->size()) {
+                     (*antennas)[packet.antennaId - 1].tunePID(kp, ki, kd);
+                     std::cout << "[Server] PID TUNE for ANT-" << packet.antennaId << ": Kp=" << kp << " Ki=" << ki << " Kd=" << kd << std::endl;
+                 }
             }
         } else if (iResult == 0) {
             std::cout << "Connection closing..." << std::endl;

@@ -104,6 +104,7 @@ function updateUI(data) {
     stats.error.innerText = `${(totalError / (data.length || 1)).toFixed(4)}°`;
     stats.flux.innerText = `${totalFlux.toFixed(2)} Jy`;
     lastUpdateText.innerText = `LAST TELEMETRY: ${new Date().toLocaleTimeString()}`;
+    updateTuningChart(data);
 }
 
 // Control Input Listeners
@@ -141,5 +142,159 @@ btnReset.addEventListener('click', () => {
         alert("Not connected to telemetry server.");
     }
 });
+
+// Populate Antenna Select list
+const pidAntIdSelect = document.getElementById('pid-ant-id');
+for (let i = 1; i <= 50; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.innerText = `ANT-${i.toString().padStart(2, '0')}`;
+    pidAntIdSelect.appendChild(opt);
+}
+
+// Preset Handler
+const pidPreset = document.getElementById('pid-preset');
+const pidKpInput = document.getElementById('pid-kp');
+const pidKiInput = document.getElementById('pid-ki');
+const pidKdInput = document.getElementById('pid-kd');
+
+const presets = {
+    default: { kp: 1.2, ki: 0.05, kd: 0.3 },
+    aggressive: { kp: 2.0, ki: 0.1, kd: 0.5 },
+    damped: { kp: 0.8, ki: 0.02, kd: 0.2 },
+    sluggish: { kp: 0.5, ki: 0.01, kd: 0.1 }
+};
+
+pidPreset.addEventListener('change', () => {
+    const p = presets[pidPreset.value];
+    if (p) {
+        pidKpInput.value = p.kp;
+        pidKiInput.value = p.ki;
+        pidKdInput.value = p.kd;
+    }
+});
+
+// Tune dispatch
+const btnTunePid = document.getElementById('btn-tune-pid');
+btnTunePid.addEventListener('click', () => {
+    const antId = parseInt(pidAntIdSelect.value);
+    const kp = parseFloat(pidKpInput.value);
+    const ki = parseFloat(pidKiInput.value);
+    const kd = parseFloat(pidKdInput.value);
+    
+    if (isNaN(kp) || isNaN(ki) || isNaN(kd)) {
+        alert("Please enter valid PID parameters.");
+        return;
+    }
+    
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            action: 'tune_pid',
+            antennaId: antId,
+            kp: kp,
+            ki: ki,
+            kd: kd
+        }));
+        console.log(`Dispatched PID tuning: ANT-${antId} Kp=${kp} Ki=${ki} Kd=${kd}`);
+    } else {
+        alert("Not connected to server.");
+    }
+});
+
+// Step Test (Autotune button)
+const btnAutotune = document.getElementById('btn-autotune');
+btnAutotune.addEventListener('click', () => {
+    const antId = parseInt(pidAntIdSelect.value);
+    let currentAz = 0.0;
+    let currentEl = 0.0;
+    if (lastTelemetryData && lastTelemetryData.length > 0) {
+        const selAnt = lastTelemetryData.find(a => a.id === (antId === 0 ? 1 : antId));
+        if (selAnt) {
+            currentAz = selAnt.az;
+            currentEl = selAnt.el;
+        }
+    }
+    const targetAz = currentAz + 5.0;
+    const targetEl = currentEl + 5.0;
+    
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            action: 'move',
+            azimuth: targetAz,
+            elevation: targetEl
+        }));
+        console.log(`Step Test initiated: Az=${targetAz}, El=${targetEl}`);
+        errorHistory = [];
+    } else {
+        alert("Not connected to server.");
+    }
+});
+
+// Live Chart Logic
+const canvas = document.getElementById('response-chart');
+const ctx = canvas.getContext('2d');
+let errorHistory = [];
+let lastTelemetryData = null;
+
+function resizeCanvas() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 100);
+
+function updateTuningChart(data) {
+    lastTelemetryData = data;
+    const antId = parseInt(pidAntIdSelect.value);
+    const selAnt = data.find(a => a.id === (antId === 0 ? 1 : antId));
+    if (!selAnt) return;
+    
+    errorHistory.push(selAnt.error);
+    if (errorHistory.length > 100) {
+        errorHistory.shift();
+    }
+    
+    drawChart();
+}
+
+function drawChart() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+        const y = (canvas.height / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+    
+    if (errorHistory.length < 2) return;
+    
+    let maxErr = Math.max(...errorHistory);
+    if (maxErr < 1.0) maxErr = 1.0;
+    
+    ctx.beginPath();
+    ctx.strokeStyle = '#a78bfa'; // Purple-400
+    ctx.lineWidth = 2;
+    
+    const dx = canvas.width / (errorHistory.length - 1);
+    for (let i = 0; i < errorHistory.length; i++) {
+        const x = i * dx;
+        const y = canvas.height - (errorHistory[i] / maxErr) * (canvas.height - 10) - 5;
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    }
+    ctx.stroke();
+    
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.font = '8px monospace';
+    ctx.fillText(`Max Error: ${maxErr.toFixed(2)}°`, 5, 12);
+    ctx.fillText(`Current: ${errorHistory[errorHistory.length - 1].toFixed(3)}°`, 5, 22);
+}
 
 connect();

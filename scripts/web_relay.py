@@ -72,6 +72,15 @@ async def telemetery_relay(websocket):
                     async with socket_lock:
                         tcp_sock.sendall(pkt)
                     print("Relayed Global RESET command")
+                elif action == 'tune_pid':
+                    kp = cmd.get('kp', 1.2)
+                    ki = cmd.get('ki', 0.05)
+                    kd = cmd.get('kd', 0.3)
+                    ant_id = cmd.get('antennaId', 0)
+                    pkt = struct.pack(PACKET_FMT, 5, ant_id, kp, ki, kd, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0)
+                    async with socket_lock:
+                        tcp_sock.sendall(pkt)
+                    print(f"Relayed PID TUNE command for ANT-{ant_id}: Kp={kp}, Ki={ki}, Kd={kd}")
 
         await asyncio.gather(
             send_telemetry_loop(),

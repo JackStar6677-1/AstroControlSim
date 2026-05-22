@@ -1,0 +1,33 @@
+name: Build and Test AstroControlSim
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup MinGW Toolchain
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+
+      - name: Compile C++ Array Simulator
+        run: |
+          mkdir build
+          g++ -Wall -std=c++17 -Iinclude -o build/JackstarObs.exe src/main.cpp src/Antenna/Antenna.cpp src/Network/AntennaServer.cpp -lws2_32
+
+      - name: Verify Executable Created
+        run: |
+          if (Test-Path "build/JackstarObs.exe") {
+              Write-Host "✅ Executable build succeeded!"
+          } else {
+              Write-Error "❌ Executable was not found!"
+          }
+        shell: powershell

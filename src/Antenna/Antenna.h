@@ -30,9 +30,9 @@ private:
     double currentVelEl;
 
     // --- CONTROL PID ---
-    const double Kp = 1.2;
-    const double Ki = 0.05;
-    const double Kd = 0.3;
+    double Kp;
+    double Ki;
+    double Kd;
 
     double integralAz = 0.0;
     double integralEl = 0.0;
@@ -60,6 +60,7 @@ public:
     void setTarget(double az, double el);
     void reset();
     void applyExternalForce(double azForce, double elForce);
+    void tunePID(double kp, double ki, double kd);
     void update(double dt); 
     void updateSensors(double dt);
     
@@ -74,6 +75,9 @@ public:
     double getSignalPhase() const;
     double getMotorTemp() const;
     double getMotorCurrent() const;
+    double getKp() const;
+    double getKi() const;
+    double getKd() const;
     AntennaState getState() const;
     std::string getStateString() const;
 
