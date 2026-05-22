@@ -1,8 +1,30 @@
 ![Hero Banner](assets/hero.svg)
 
-# AstroControlSim 📡✨
+<h1 align="center">AstroControlSim</h1>
 
-Un simulador de matriz de radiotelescopios de alto rendimiento desarrollado en **C++** y **Python**. Este proyecto simula los sistemas de control físico, protocolos binarios de red en tiempo real y visualización de datos utilizados en observatorios astronómicos profesionales de vanguardia (inspirado en la arquitectura de ALMA y VLA).
+<p align="center">
+  <strong>Simulador de radiotelescopios · Jackstar Observatory</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/JackStar6677-1"><img src="https://img.shields.io/badge/Creador-JackStar6677-8a2be2?style=for-the-badge" alt="JackStar6677"/></a>
+  <img src="https://img.shields.io/badge/C++-17-00599C?style=for-the-badge&logo=cplusplus&logoColor=white" alt="C++17"/>
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/TCP-86%20bytes-d4af37?style=for-the-badge" alt="Protocol"/>
+  <a href="https://github.com/JackStar6677-1/Coronalis"><img src="https://img.shields.io/badge/Minecraft-Coronalis-7c3aed?style=for-the-badge" alt="Coronalis addon"/></a>
+</p>
+
+Un simulador de matriz de radiotelescopios de alto rendimiento desarrollado en **C++** y **Python**. Simula control físico, protocolos binarios en tiempo real y operación de observatorio (inspirado en ALMA y VLA).
+
+> **Minecraft (repo aparte):** el addon Slimefun se llama **[Coronalis](https://github.com/JackStar6677-1/Coronalis)** — nombre propio del ecosistema Jack, sin relación con marcas de terceros. Ver [docs/CORONALIS.md](docs/CORONALIS.md).
+
+| | **AstroControlSim** (aquí) | **Coronalis** (addon) |
+|---|---------------------------|------------------------|
+| Plataforma | C++ / Python / Web | Paper + Slimefun 6 |
+| Repo | `JackStar6677-1/AstroControlSim` | `JackStar6677-1/Coronalis` |
+| Código fuente addon | — | `drakes-slimefun-labs/.../Coronalis` |
+
+Créditos: [CREDITS.md](CREDITS.md)
 
 ---
 
@@ -145,4 +167,13 @@ Para evitar bloqueos y desalineaciones de red, toda la comunicación utiliza la 
 | `state` | `uint8_t` | 1 | Estado actual de la antena (TRACKING, SLEWING, FAULT) |
 
 ---
-*Desarrollado bajo el marco de ingeniería del Observatorio Virtual Autónomo y Sistemas de Adquisición Jackstar.*
+<p align="center">
+  <strong>Desarrollado por <a href="https://github.com/JackStar6677-1">JackStar6677</a></strong><br/>
+  <em>Observatorio Virtual Autónomo · Jackstar Engineering</em>
+</p>
+
+<p align="center">
+  <a href="docs/SLIMEFUN_ADDON.md">Addon Slimefun</a> ·
+  <a href="CREDITS.md">Créditos</a> ·
+  <a href="https://github.com/JackStar6677-1/AstroControlSim/issues">Issues</a>
+</p>

@@ -1,0 +1,27 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AstroControlSim GitHub social card">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05030d"/>
+      <stop offset="45%" stop-color="#1b113a"/>
+      <stop offset="100%" stop-color="#2c0f38"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f3e098"/>
+      <stop offset="100%" stop-color="#d4af37"/>
+    </linearGradient>
+    <style>
+      .ey { font: 700 26px 'Segoe UI', Arial; fill: #da70d6; letter-spacing: 6px; }
+      .ti { font: 800 96px 'Segoe UI', Arial; fill: url(#gold); }
+      .su { font: 500 34px 'Segoe UI', Arial; fill: #e2e8f0; }
+      .dot { animation: p 2s ease-in-out infinite; }
+      @keyframes p { 0%,100%{opacity:.45;r:6} 50%{opacity:1;r:9} }
+    </style>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <text x="72" y="120" class="ey">JACKSTAR6677</text>
+  <text x="68" y="260" class="ti">AstroControlSim</text>
+  <text x="72" y="340" class="su">50 antenas · PID · 86-byte TCP · 10 Hz</text>
+  <text x="72" y="400" class="su" fill="#94a3b8">C++ · Python · Web · Addon Slimefun</text>
+  <circle class="dot" cx="72" cy="480" r="8" fill="#52ff85"/>
+  <text x="100" y="488" font-family="Consolas, monospace" font-size="22" fill="#52ff85">ARRAY ONLINE</text>
+</svg>

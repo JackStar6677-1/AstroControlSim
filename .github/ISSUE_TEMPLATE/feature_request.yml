@@ -1,0 +1,15 @@
+name: Sugerencia
+description: Idea para el observatorio o el addon
+title: "[Idea]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Jackstar Observatory** — simulador y addon Slimefun comparten marca pero repos distintos.
+  - type: textarea
+    id: idea
+    attributes:
+      label: Describe la idea
+    validations:
+      required: true

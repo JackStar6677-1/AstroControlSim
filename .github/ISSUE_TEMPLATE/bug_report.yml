@@ -1,0 +1,30 @@
+name: Informe de error
+description: Algo falla en el simulador o en la build
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar. Proyecto por **JackStar6677** · [AstroControlSim](https://github.com/JackStar6677-1/AstroControlSim)
+  - type: textarea
+    id: what
+    attributes:
+      label: Qué ocurrió
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Componente
+      options:
+        - JackstarObs.exe (C++)
+        - web_relay.py
+        - web/index.html
+        - Scripts Python
+        - Build / CI
+        - Addon Slimefun (en drakes-slimefun-labs)
+  - type: input
+    id: version
+    attributes:
+      label: SO / compilador / Python
