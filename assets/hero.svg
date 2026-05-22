@@ -55,24 +55,12 @@
       0%, 100% { opacity: 0.4; }
       50% { opacity: 1; }
     }
-    @keyframes dishTrack {
-      0%, 100% { transform: rotate(-3deg); }
-      50% { transform: rotate(4deg); }
-    }
-    @keyframes scanLine {
-      0% { transform: translateX(-120px); opacity: 0; }
-      15% { opacity: 0.5; }
-      85% { opacity: 0.5; }
-      100% { transform: translateX(820px); opacity: 0; }
-    }
     .star-slow { animation: pulse 4s infinite ease-in-out; }
     .star-fast { animation: pulse 2s infinite ease-in-out; }
     .star-medium { animation: pulse 3s infinite ease-in-out; }
     .dish-beam {
       animation: beamPulse 6s infinite ease-in-out;
     }
-    .dish-main { animation: dishTrack 9s infinite ease-in-out; transform-origin: 680px 140px; }
-    .scan-sweep { animation: scanLine 8s infinite linear; }
     .wave-line {
       stroke-dasharray: 8, 12;
       animation: dash 5s infinite linear;
@@ -112,15 +100,12 @@
   <path d="M -50 220 C 150 120, 450 120, 850 220" fill="none" stroke="url(#purpleGrad)" stroke-width="1" opacity="0.2" class="wave-line" style="animation-duration: 7s;"/>
   <path d="M -50 190 C 150 90, 450 90, 850 190" fill="none" stroke="url(#purpleGrad)" stroke-width="0.8" opacity="0.1" class="wave-line" style="animation-duration: 9s;"/>
 
-  <!-- barrido de telemetría -->
-  <rect class="scan-sweep" x="0" y="120" width="140" height="2" fill="#da70d6" opacity="0.35" rx="1"/>
-
   <!-- Golden Ray / Signal Beam -->
   <path d="M 680 250 L 520 -50 L 450 -50 Z" fill="url(#beamGrad)" opacity="0.45" class="dish-beam"/>
 
   <!-- Observatory Dishes (Silhouettes & Stylized Gold Details) -->
   <!-- Dish 1 (Large Foreground Right) -->
-  <g class="dish-main" transform="translate(620, 160) scale(0.9)">
+  <g transform="translate(620, 160) scale(0.9)">
     <!-- Base / Mount -->
     <path d="M 60 100 L 40 40 L 80 40 Z" fill="#201a35" stroke="url(#goldGrad)" stroke-width="1.5"/>
     <rect x="55" y="40" width="10" height="20" fill="url(#goldGrad)"/>

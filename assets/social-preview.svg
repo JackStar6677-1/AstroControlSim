@@ -20,8 +20,8 @@
   <rect width="1280" height="640" fill="url(#bg)"/>
   <text x="72" y="120" class="ey">JACKSTAR6677</text>
   <text x="68" y="260" class="ti">AstroControlSim</text>
-  <text x="72" y="340" class="su">50 antenas · PID · 86-byte TCP · 10 Hz</text>
-  <text x="72" y="400" class="su" fill="#94a3b8">C++ · Python · Web Control Center</text>
+  <text x="72" y="340" class="su">50 antenas &#183; PID &#183; 86-byte TCP &#183; 10 Hz</text>
+  <text x="72" y="400" class="su" fill="#94a3b8">C++ &#183; Python &#183; Web Control Center</text>
   <circle class="dot" cx="72" cy="480" r="8" fill="#52ff85"/>
   <text x="100" y="488" font-family="Consolas, monospace" font-size="22" fill="#52ff85">ARRAY ONLINE</text>
 </svg>
