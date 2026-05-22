@@ -29,14 +29,19 @@ graph TD
     classDef python fill:#191135,stroke:#8e44ad,stroke-width:2px,color:#fff;
     classDef web fill:#0a0614,stroke:#da70d6,stroke-width:1px,color:#fff;
     
-    A["Jackstar Physics Engine (C++)<br/>(Simula 50 Antenas + PID)"] :::cpp
-    B["Antenna Server (C++ Multi-thread)<br/>(Socket TCP - Puerto 9000)"] :::cpp
-    C["Web Relay (Python / Asyncio)<br/>(WebSocket - Puerto 9001)"] :::python
-    D["Web Control Center (HTML5/JS)<br/>(Navegador Web)"] :::web
+    A["Jackstar Physics Engine (C++)<br/>(Simula 50 Antenas + PID)"]
+    B["Antenna Server (C++ Multi-thread)<br/>(Socket TCP - Puerto 9000)"]
+    C["Web Relay (Python / Asyncio)<br/>(WebSocket - Puerto 9001)"]
+    D["Web Control Center (HTML5/JS)<br/>(Navegador Web)"]
     
     A <-->|Lectura/Escritura Mutex| B
     B <-->|Paquetes Binarios TCP 86-Bytes| C
     C <-->|Mensajes JSON WebSockets| D
+    
+    class A cpp;
+    class B cpp;
+    class C python;
+    class D web;
     
     %% Operational Flows
     subgraph Red Local C++
