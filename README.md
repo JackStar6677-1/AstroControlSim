@@ -167,3 +167,5 @@ Para evitar bloqueos y desalineaciones de red, toda la comunicación utiliza la 
   <a href="CREDITS.md">Créditos</a> ·
   <a href="https://github.com/JackStar6677-1/AstroControlSim/issues">Issues</a>
 </p>
+
+<!-- Updated for 2026 active baseline maintenance -->
