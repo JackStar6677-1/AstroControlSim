@@ -24,14 +24,14 @@ Créditos: [CREDITS.md](CREDITS.md)
 *   **Jackstar Engine (C++):** Simulación en tiempo real de una matriz de 50 antenas. Incorpora cálculo físico de inercia, aceleración y perfiles de velocidad trapezoidales.
 *   **Concurrencia Segura (Nuevo):** Servidor multihilo protegido con exclusión mutua (`std::mutex`) para evitar condiciones de carrera en las lecturas/escrituras de estado del array.
 *   **Protocolo TCP/IP Binario Sincronizado (Nuevo):** Comunicación en tiempo real basada en paquetes binarios estructurados de **86 bytes**. Se solucionó el desfase histórico de comunicación de red entre Python y C++ que causaba bloqueos de red (deadlocks).
-*   **Bidirectional Web Relay (Nuevo):** Retransmisor asíncrono desarrollado en Python (`web_relay.py`) usando `asyncio` y `websockets`. Permite consultar telemetría a 10 Hz y reenviar commands entrantes concurrentemente de manera segura.
-*   **Web Control Center (Nuevo):** Interfaz web premium totalmente cableada. Los mandos de control de despacho de coordenadas y buttons de parada de emergencia (`RESET`) interactúan directamente con la red física de antenas.
+*   **Bidirectional Web Relay (Nuevo):** Retransmisor asíncrono desarrollado en Python (`web_relay.py`) usando `asyncio` y `websockets`. Permite consultar telemetría a 10 Hz y reenviar comandos entrantes concurrentemente de manera segura.
+*   **Web Control Center (Nuevo):** Interfaz web premium totalmente cableada. Los mandos de control de despacho de coordenadas y botones de parada de emergencia (`RESET`) interactúan directamente con la red física de antenas.
 *   **Control de Lazo Cerrado (PID):** Sistema de control Proporcional-Integral-Derivado para posicionamiento preciso y amortiguación de perturbaciones por viento.
 *   **Simulación de Interferometría:** Generación y desfase de señales complejas en tiempo real (Amplitud/Fase) basadas en la geometría del array en el plano UV.
 
 ---
 
-## 🏛️ Arquitectura de Comunicación
+## 🏛️ Architecture de Comunicación
 
 El siguiente diagrama explica el flujo bidireccional de datos entre el hardware simulado en C++ y el centro de control web:
 
@@ -73,7 +73,7 @@ graph TD
 
 ### Protocolo de Comunicación y Flujo de Telemetría (10 Hz)
 
-El siguiente diagrama detalla cómo fluyen los commands y la telemetría en tiempo real de forma segura y libre de condiciones de carrera:
+El siguiente diagrama detalla cómo fluyen los comandos y la telemetría en tiempo real de forma segura y libre de condiciones de carrera:
 
 ```mermaid
 sequenceDiagram
@@ -84,7 +84,7 @@ sequenceDiagram
     participant Sim as Jackstar Engine (Física + PID)
 
     Note over Sim,Srv: Acceso concurrente seguro mediante std::mutex
-    UI->>Relay: Envia command en JSON (MOVE/RESET)
+    UI->>Relay: Envia comando en JSON (MOVE/RESET)
     Relay->>Srv: Convierte y envía paquete binario (86 bytes)
     Note over Srv: Desempaqueta estructura binaria en memoria
     Srv->>Sim: Actualiza coordenadas de destino de antena
@@ -120,7 +120,7 @@ sequenceDiagram
     ```powershell
     mingw32-make
     ```
-    *(Esto creará la folder `build/` con el ejecutable `JackstarObs.exe`)*
+    *(Esto creará la carpeta `build/` con el ejecutable `JackstarObs.exe`)*
 
 2.  **Lanzar la Simulación de Antenas:**
     ```powershell
